@@ -3,16 +3,16 @@ import sendMixpanelRequest from './sendMixpanelRequest'
 // Configuration Constants
 const MIXPANEL_ENGAGE_ENDPOINT = '/engage'
 
-export default function updateUserProfile ({ token, distinctId, userProfileData }) {
+export default function updateUserProfileUnionData ({ token, distinctId, userProfileUnionData }) {
   // Build request data for engage request
-  const engageRequestData = {
+  const engageRequestUnionData = {
     '$token': token,
     '$distinct_id': distinctId,
-    '$set': userProfileData,
+    '$union': userProfileUnionData
   }
 
   return sendMixpanelRequest({
     endpoint: MIXPANEL_ENGAGE_ENDPOINT,
-    data: engageRequestData,
+    data: engageRequestUnionData,
   })
 }

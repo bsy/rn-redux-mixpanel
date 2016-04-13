@@ -1,10 +1,12 @@
 import trackEvent from './api/trackEvent'
-import updateUserProfile from './api/updateUserProfile'
+import updateUserProfileSetData from './api/updateUserProfileSetData'
+import updateUserProfileUnionData from './api/updateUserProfileUnionData'
 
 export default function mixpanel({
   token,
   selectDistinctId = () => null,
-  selectUserProfileData = () => null,
+  selectUserProfileSetData = () => null,
+  selectUserProfileUnionData = () => null,
   selectEventName = (action) => action.type,
   selectProperties = () => null,
   ignoreAction = (action) => false,
@@ -29,16 +31,28 @@ export default function mixpanel({
       eventData: properties
     })
 
-    // Select user profile data for action; if it selects truthy data,
+    // Select user profile set data for action; if it selects truthy data,
     // update user profile on Mixpanel
-    const userProfileData = selectUserProfileData(action, state)
-    if (userProfileData) {
-      updateUserProfile({
+    const userProfileSetData = selectUserProfileSetData(action, state)
+    if (userProfileSetData) {
+      updateUserProfileSetData({
         token,
         distinctId,
-        userProfileData,
+        userProfileSetData,
       })
     }
+
+    // Select user profile union data for action; if it selects truthy data,
+    // update user profile on Mixpanel
+    const userProfileUnionData = selectUserProfileUnionData(action, state)
+    if (userProfileUnionData) {
+      updateUserProfileUnionData({
+        token,
+        distinctId,
+        userProfileUnionData,
+      })
+    }
+
 
     return next(action)
   }
